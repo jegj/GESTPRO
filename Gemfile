@@ -10,6 +10,8 @@ gem 'mysql2'
 gem "composite_primary_keys", "~> 5.0.4"
 gem 'haml'
 gem 'haml-rails'
+gem 'therubyracer'
+gem 'execjs'
 
 # Gems used only for assets and not required
 # in production environments by default.

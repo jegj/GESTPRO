@@ -29,6 +29,20 @@
         buttonImage: "/assets/imagedate.gif",
         buttonImageOnly: true
         dateFormat: "yy-mm-dd"
+  $ ->
+      $('#entregable_numero_integrantes').change -> 
+        $('#spinner').show()
+        integrantes=$(this).attr('value')
+        $.ajax
+          url: 'ajax_integrante_otro?cantidad='+integrantes,
+          success: (data) ->
+            $('#integrantes').html data
+            $('#spinner').hide()
+
+        
+        
+
+
         
    					
       

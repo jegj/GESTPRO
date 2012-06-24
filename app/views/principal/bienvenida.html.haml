@@ -10,7 +10,7 @@
 
               =link_to entrega.nombre
               %br/
-              =link_to "ListarEntregables",{:controller => "principal",:action => "listar_entregables",:entrega_id => entrega.id},:class => "nolistado"
+              =link_to "Listar Entregables",{:controller => "principal",:action => "listar_entregables",:entrega_id => entrega.id},:class => "nolistado"
               %br/
 
     %p
@@ -22,6 +22,20 @@
         =button_to "Asignar Docente" , :action => "comprobar_docente" , :controller => "administrador"
   -if session[:usuario].es_estudiante?
     %p
-      Estudiante Materia
+      #listado-materias
+      -session[:rol].materias.each do |materia|
+        %h3
+          =link_to materia.nombre
+        %div  
+          %p
+            -materia.entrega_cedula(session[:rol].usuario_cedula).each do |entrega|
+
+              =link_to entrega.nombre 
+              
+              =link_to "Realizar entrega",{:controller => "principal",:action => "realizar_entrega",:method => :post, :entrega_id => entrega.id, :usuario_cedula => session[:rol].usuario_cedula},:class => "nolistado" 
+              =link_to "Ver entrega",{:controller => "principal",:action => "listar_mis_entregables", :method => :post,:entrega_id => entrega.id, :usuario_cedula => session[:rol].usuario_cedula}, :class => "nolistado"
+              %br/
+              
+
 
 

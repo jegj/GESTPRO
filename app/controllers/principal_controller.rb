@@ -97,6 +97,10 @@ class PrincipalController < ApplicationController
     @secciones = Seccion.where(:materia_id => materia_id)
     render :layout =>false
   end
+  def ajax_integrante_otro
+    @cantidad = params[:cantidad]
+    render :layout =>false
+  end
   
   def procesar_crear_entrega
     # @entrega=params[:entrega]
@@ -154,4 +158,267 @@ class PrincipalController < ApplicationController
     @entregable=Entregable.where(:entrega_id => params[:entrega_id])
   end
   
-end
+  def listar_mis_entregables
+    unless params[:entrega_id] || params[:usuario_cedula]
+      flash[:mensaje2]="Faltan Parametros"
+      render :action => "bienvenida"
+      
+      return
+    end
+    materia_nombre = EntregaSeccion.buscar_materia(params[:entrega_id])    
+    @titulo_pagina="Entregable de #{materia_nombre}"
+
+    grupo=EstudianteGrupo.where(:entrega_id => params[:entrega_id],:estudiante_cedula => params[:usuario_cedula])
+
+    if(grupo != [])
+
+      grupo=grupo.first
+      grupo=grupo.grupo_nro
+      @entregable=Entregable.where(:entrega_id => params[:entrega_id], :grupo_nro => grupo)
+    else
+      @entregable=-1
+      return
+    end
+
+  end
+
+  def realizar_entrega
+    @titulo_pagina= "Realizar Entrega"
+    numero =Entrega.where(:id => params[:entrega_id]).first.numero_max_integrantes
+    @integrantes=[[1,1]]
+    for x in (2..Integer(numero))
+      @integrantes+= [[x,x]]
+    end
+    @cedula = params[:usuario_cedula]
+    @entrega_id = params[:entrega_id]
+
+  end
+
+ 
+  def procesar_realizar_entrega
+    
+    tieneGrupo=EstudianteGrupo.where(:estudiante_cedula=> params[:entregable_integrantes],:entrega_id => params[:entrega_id])
+
+    
+    if tieneGrupo!=[]
+      bitacora "Tiene #{tieneGrupo}"
+      tiene=true
+
+      tieneGrupo=tieneGrupo.first.grupo_nro;
+      # Tiene grupo pero revisemos los otros
+      cantidad=Integer(params[:entregable][:numero_integrantes])
+
+      for x in [2..cantidad]
+        unless EstudianteGrupo.where(:estudiante_cedula=>params[:entregable][:integrantes],:entrega_id => params[:entrega_id],:grupo_nro => tieneGrupo)
+          tiene=false
+           
+        end
+        
+      end
+      #Los otros no tienen
+      unless tiene
+
+        entregable_integrantes=Integer(params[:entregable_integrantes])
+        entrega_id=Integer(params[:entrega_id])
+        numero_integrantes=Integer(params[:entregable][:numero_integrantes])
+      
+        archivo=params[:archivo]
+        
+
+        @grupoS = EstudianteGrupo.new
+        @grupoS.estudiante_cedula=entregable_integrantes
+        @grupoS.entrega_id=entrega_id
+
+        nGrupo=EstudianteGrupo.maximum(:grupo_nro)+1
+        @grupoS.grupo_nro=nGrupo
+        @nuevoGrupo = Grupo.new
+        @nuevoGrupo.entrega_id=entrega_id
+        @nuevoGrupo.nro=nGrupo
+        @nuevoGrupo.save
+        @grupoS.save
+        bitacora "Se almaceno el nuevo grupo #{nGrupo} de la entrega #{entrega_id}"
+        cantidad=Integer(numero_integrantes)
+
+      
+        if numero_integrantes>=2
+          if Estudiante.where(:usuario_cedula=> params[:entregable]["2"])
+            integrantes=Integer(params[:entregable]["2"])
+            @NgrupoS = EstudianteGrupo.new
+            @NgrupoS.estudiante_cedula=integrantes
+            @NgrupoS.grupo_nro=nGrupo
+            @NgrupoS.entrega_id=entrega_id
+            bitacora "Se almaceno el integrante #{integrantes} perteneciente al grupo #{nGrupo} de la entrega #{entrega_id}"
+            @NgrupoS.save
+          else
+            @entregable.errors[:base]<<"La cedula del integrante 2 no corresponde a la de un Estudiante."
+            render :action =>"realizar_entrega"
+            return
+
+          end
+
+        end
+        if numero_integrantes>=3
+          if Estudiante.where(:usuario_cedula=> params[:entregable]["3"])
+            integrantes=Integer(params[:entregable]["3"])
+            @NgrupoS = EstudianteGrupo.new
+            @NgrupoS.estudiante_cedula=integrantes
+            @NgrupoS.grupo_nro=nGrupo
+            @NgrupoS.entrega_id=entrega_id
+            bitacora "Se almaceno el integrante #{integrantes} perteneciente al grupo #{nGrupo} de la entrega #{entrega_id}"
+            @NgrupoS.save
+          else
+            @entregable.errors[:base]<<"La cedula del integrante 3 no corresponde a la de un Estudiante."
+            render :action =>"realizar_entrega"
+            return
+          end
+        end
+        
+        @entregableN=Entregable.new
+        @entregableN.grupo_nro=nGrupo
+        @entregableN.entrega_id=entrega_id
+        @entregableN.estudiante_cedula_entrego=entregable_integrantes
+        @entregableN.fecha_hora=Time.now
+        @entregableN.version=1
+        @entregableN.save
+        bitacora "El estudiante #{entregable_integrantes} almaceno un Entregable a las #{@entregableN.fecha_hora} perteneciente al grupo #{nGrupo} de la entrega #{entrega_id}"
+        @entregableAN=EntregableArchivo.new
+        @entregableAN.grupo_nro=nGrupo
+        @entregableAN.entrega_id=entrega_id
+        archivo=archivo
+        @entregableAN.archivo=archivo
+        if archivo
+          @entregableAN.nombre=archivo[0,archivo.length-3]
+          @entregableAN.tipo=archivo[archivo.length-3,archivo.length]
+        
+          @entregableAN.save
+          bitacora "Se guardo el archivo #{archivo} perteneciente a la entrega #{entrega_id} del grupo #{nGrupo}"
+        end  
+      
+      end
+        #Tienen grupo
+
+      if tiene
+        entregable_integrantes=Integer(params[:entregable_integrantes])
+        entrega_id=Integer(params[:entrega_id])
+        numero_integrantes=Integer(params[:entregable][:numero_integrantes])
+      
+        archivo=params[:archivo]
+      
+        nGrupo=EstudianteGrupo.where(:estudiante_cedula=> entregable_integrantes,:entrega_id => entrega_id).first.grupo_nro
+       
+        @entregableN=Entregable.new
+        @entregableN.grupo_nro=nGrupo
+        @entregableN.entrega_id=entrega_id
+        @entregableN.estudiante_cedula_entrego=entregable_integrantes
+        @entregableN.fecha_hora=Time.now
+        @entregableN.version=1
+        @entregableN.save
+        bitacora "El estudiante #{entregable_integrantes} almaceno un Entregable a las #{@entregableN.fecha_hora} perteneciente al grupo #{nGrupo} de la entrega #{entrega_id}"
+        @entregableAN=EntregableArchivo.new
+        @entregableAN.grupo_nro=nGrupo
+        @entregableAN.entrega_id=entrega_id
+        archivo=archivo
+        @entregableAN.archivo=archivo
+        if archivo
+          @entregableAN.nombre=archivo[0,archivo.length-3]
+          @entregableAN.tipo=archivo[archivo.length-3,archivo.length]
+        
+          @entregableAN.save
+          bitacora "Se guardo el archivo #{archivo} perteneciente a la entrega #{entrega_id} del grupo #{nGrupo}"
+        end
+      end
+
+    end
+    #No tiene grupo
+    bitacora "Entro en procesara #{tieneGrupo}"
+    if tieneGrupo==[]
+      
+      bitacora "No tiene grupo"
+      entregable_integrantes=Integer(params[:entregable_integrantes])
+      entrega_id=Integer(params[:entrega_id])
+      numero_integrantes=Integer(params[:entregable][:numero_integrantes])
+      
+      archivo=params[:archivo]
+      
+
+      @grupoS = EstudianteGrupo.new
+      @grupoS.estudiante_cedula=entregable_integrantes
+      @grupoS.entrega_id=entrega_id
+      bitacora "Estudiante Grupo"
+      nGrupo=EstudianteGrupo.maximum(:grupo_nro)+1
+      @grupoS.grupo_nro=nGrupo
+      @nuevoGrupo = Grupo.new
+      @nuevoGrupo.entrega_id=entrega_id
+      @nuevoGrupo.nro=nGrupo
+      @nuevoGrupo.save
+      @grupoS.save
+      bitacora "Se almaceno el nuevo grupo #{nGrupo} de la entrega #{entrega_id}"
+      cantidad=Integer(numero_integrantes)
+
+      
+      if numero_integrantes>=2
+        if Estudiante.where(:usuario_cedula => params[:entregable]["2"])
+          integrantes=Integer(params[:entregable]["2"])
+          @NgrupoS = EstudianteGrupo.new
+          @NgrupoS.estudiante_cedula=integrantes
+          @NgrupoS.grupo_nro=nGrupo
+          @NgrupoS.entrega_id=entrega_id
+          bitacora "Se almaceno el integrante #{integrantes} perteneciente al grupo #{nGrupo} de la entrega #{entrega_id}"
+          @NgrupoS.save
+        end
+        unless Estudiante.where(:usuario_cedula => params[:entregable]["2"])
+          @entregable.errors[:base]<<"La cedula del integrante 2 no corresponde a la de un Estudiante."
+          render :action =>"realizar_entrega"
+          return
+
+        end
+
+      end
+      if numero_integrantes>=3
+        if Estudiante.where(:usuario_cedula => params[:entregable]["3"])
+          integrantes=Integer(params[:entregable]["3"])
+          @NgrupoS = EstudianteGrupo.new
+          @NgrupoS.estudiante_cedula=integrantes
+          @NgrupoS.grupo_nro=nGrupo
+          @NgrupoS.entrega_id=entrega_id
+          bitacora "Se almaceno el integrante #{integrantes} perteneciente al grupo #{nGrupo} de la entrega #{entrega_id}"
+          @NgrupoS.save
+        else
+          @entregable.errors[:base]<<"La cedula del integrante 3 no corresponde a la de un Estudiante."
+          render :action =>"realizar_entrega"
+          return
+        end
+      end
+      
+      @entregableN=Entregable.new
+      @entregableN.grupo_nro=nGrupo
+      @entregableN.entrega_id=entrega_id
+      @entregableN.estudiante_cedula_entrego=entregable_integrantes
+      @entregableN.fecha_hora=Time.now
+      @entregableN.version=1
+      @entregableN.save
+      bitacora "El estudiante #{entregable_integrantes} almaceno un Entregable a las #{@entregableN.fecha_hora} perteneciente al grupo #{nGrupo} de la entrega #{entrega_id}"
+      @entregableAN=EntregableArchivo.new
+      @entregableAN.grupo_nro=nGrupo
+      @entregableAN.entrega_id=entrega_id
+      archivo=archivo
+      @entregableAN.archivo=archivo
+      if archivo
+        @entregableAN.nombre=archivo[0,archivo.length-3]
+        @entregableAN.tipo=archivo[archivo.length-3,archivo.length]
+      
+        @entregableAN.save
+        bitacora "Se guardo el archivo #{archivo} perteneciente a la entrega #{entrega_id} del grupo #{nGrupo}"
+      end 
+    end
+    flash[:mensaje2]='Entrega realizada con exito'
+    redirect_to :action =>'bienvenida'
+  end
+    
+    
+
+    
+
+  end
+  
+
