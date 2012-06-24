@@ -1,0 +1,67 @@
+- if @usr==nil
+	= error_messages_for :usuario
+	= form_tag :action => "guardar_crear_docente_entrega" do
+
+		%p
+		= label :usuario ,:cedula , "Cedula Docente:"
+		%br/
+		= text_field :usuario ,:cedula
+
+		%p
+		= label :usuario ,:nombres , "Nombres Docente:"
+		%br/
+		= text_field :usuario ,:nombres
+
+		%p
+		= label :usuario ,:apellidos , "Apellidos Docente:"
+		%br/
+		= text_field :usuario ,:apellidos
+
+		%p
+		= label :usuario ,:correo , "Correo Docente:"
+		%br/
+		= text_field :usuario ,:correo
+
+		%p
+		= label :usuario , :clave ,"Contraseña:"
+		%br/
+		= password_field :usuario , :clave
+
+		%p
+		= label :usuario , :clave_confirmation ,"Repita Contraseña:"
+		%br/
+		= password_field :usuario , :clave_confirmation
+
+		%p
+		= label :docente_materia ,:materia , "Materia:"
+		%br/
+		= collection_select :docente_materia,:materia_id,@materias,:id,:nombre,:prompt => "Seleccionar una Materia"
+		%p
+		= submit_tag "Guardar"
+- else
+	= error_messages_for :docente_materia
+	%p
+		= label :usuario ,:cedula ,"Cedula:" ,:class=>'negro'
+		= @usr.cedula
+	%p
+		= label :usuario ,:nombres ,"Nombres:",:class=>'negro'
+		= @usr.nombres
+	%p
+		= label :usuario,:apellidos,"Apellidos:",:class=>'negro'
+		= @usr.apellidos
+	%p
+		= label :usuario,:correo ,"Correo:",:class=>'negro'
+		= @usr.correo
+	=form_tag :action => "guardar_docente_entrega" do
+		= hidden_field_tag :docente_cedula , @usr.cedula
+		%p
+		= label :docente_materia ,:materia_id ,"Materia:" ,:class=>'negro'
+		%br/
+		= collection_select :docente_materia,:materia_id,@materias,:id,:nombre,:prompt => "Seleccionar una Materia"
+		%p
+		= submit_tag "Guardar"
+
+%hr
+%p
+	.demo
+		=button_to "Atras" , :action=>"comprobar_docente"

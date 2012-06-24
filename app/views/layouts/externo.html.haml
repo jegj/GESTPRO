@@ -1,0 +1,61 @@
+!!! Strict  
+%html{:lang => "en", "xml:lang" => "en", :xmlns => "http://www.w3.org/1999/xhtml"}
+  %head
+    %title GESTPRO
+    = stylesheet_link_tag    "application", :media => "all"
+    = javascript_include_tag "application"
+    = csrf_meta_tags
+  %body
+    #contenedorprincipal
+      #encabezado
+        .imagencabecera
+          = image_tag "niños.jpg"
+        %h1 
+          %a{:href => "#"} GESTPRO
+        %p Modulo de Gestión de Proyectos
+        #menuprincipal
+          %ul
+            %li
+              %a.resaltado{:href => "index"}
+                %span Inicio
+      #contenedorsecundario
+        #contenedorterciario
+          %h2
+            .alert.alert-info=@titulo_pagina
+          .mensajeprincipal
+            = yield
+          %p
+          - if flash[:mensaje2]
+            .error
+              = flash[:mensaje2]
+        #barralateral
+          .cuadro
+            - if flash[:mensaje]
+              %p{:style => "color:black;background-color:yellow"}
+                = flash[:mensaje]
+            %h2 Inicio de Sesion
+            = form_tag :action => "validar" do
+              %p
+              = label :usuario ,:cedula , "Cedula:"
+              / # REGISTRO/CAMPO/COMO_SE_VE
+              = text_field :usuario , :cedula
+              / #REGISTRO /CAMPO
+              %p
+              = label :usuario ,:clave , "Clave:"
+              = password_field :usuario , :clave
+              %p
+              = submit_tag "Entrar"
+            = link_to "¿Olvido su cotraseña?",:action=>"olvido_contrasena"
+      #pie
+        %p
+          Copyright © 2012 GESTPRO.com -
+          %a{:href => "http://www.infscripts.com/"} CSS Templates
+          by Inf Design - Valid
+          %a{:href => "http://validator.w3.org/check?uri=referer"} XHTML
+          \&
+          %a{:href => "http://jigsaw.w3.org/css-validator/check/referer"} CSS
+          / %@##
+          Diseño proporcionado por
+          = succeed "." do
+            %a{:href => "http://www.freewebtemplates.com"} Free Website Templates
+          / ##@%

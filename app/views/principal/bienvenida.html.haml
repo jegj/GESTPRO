@@ -1,0 +1,27 @@
+.mensajeprincipal
+  -if  session[:usuario].es_docente? 
+    #listado-materias
+      -session[:rol].materias.each do |materia|
+        %h3
+          =link_to materia.nombre
+        %div  
+          %p
+            -materia.entregas.each do |entrega|
+
+              =link_to entrega.nombre
+              %br/
+              =link_to "ListarEntregables",{:controller => "principal",:action => "listar_entregables",:entrega_id => entrega.id},:class => "nolistado"
+              %br/
+
+    %p
+      =button_to "Crear Entrega" , :action => "crear_entrega"
+    %p
+  -if session[:usuario].es_administrador?
+    %p
+      .demo 
+        =button_to "Asignar Docente" , :action => "comprobar_docente" , :controller => "administrador"
+  -if session[:usuario].es_estudiante?
+    %p
+      Estudiante Materia
+
+

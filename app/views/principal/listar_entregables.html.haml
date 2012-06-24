@@ -1,0 +1,24 @@
+.mensajeprincipal
+	-if @entregable.empty?
+		#vacio
+			%p
+				No hay entregables 	
+	-else	
+		#listado_entregable
+			-@entregable.each do  |un_entregable|
+				%h3
+					=link_to "Grupo #{un_entregable.grupo_nro}"
+				%div
+					%p
+						="Fecha/Hora: #{un_entregable.fecha_hora}"
+					%p
+						="Version:  #{un_entregable.version}"
+					%p
+						="Cedula de Estudiante que Entrego : #{un_entregable.estudiante_cedula_entrego}"
+					%p
+						=link_to "Descargar Entregable" ,{:controller => "principal" ,:action =>"algo"},:class => "nolistado"				
+%hr				
+%p
+.demo
+	= button_to "Atras" ,:action => "bienvenida"
+	

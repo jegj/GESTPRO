@@ -1,0 +1,53 @@
+= error_messages_for :entrega
+= form_tag :action => "procesar_crear_entrega" do
+  / %fieldset
+  /   %legend Datos de la Materia
+  %p
+  = label :entrega_seccion,:materia_id , "Materia:"
+  %br/
+  = collection_select :entrega_seccion,:materia_id,@materias,:id,:nombre,:prompt => "Seleccionar una Materia"
+  %span{ :id => 'spinner',:style => "display:none"}
+    = image_tag "spinner.gif"
+  %p
+  = label :entrega_seccion,:seccion_nombre , "Seccion:"
+  %br/
+  #secciones
+  %p
+  = label :entrega ,:nombre, "Nombre:"
+  %br/
+  = text_field :entrega ,:nombre 
+  %p
+  = label :entrega ,:fecha_entrega , "Fecha Entrega"
+  %br/
+  = text_field :entrega , :fecha_entrega ,:class =>'fecha'
+  %p
+  = label :entrega ,:fecha_tope , "Fecha tope"
+  %br/
+  = text_field :entrega , :fecha_tope ,:class =>'fecha'
+  %p
+  = label :entrega ,:limite_versiones, "Limite de versiones:"
+  %br/
+  = select :entrega,:limite_versiones,[[1,1],[5,5],[10,10],[20,20]], :prompt => 'Seleccione...'
+  %p
+  = label :entrega ,:archivo_formato, "Tipo de formato:"
+  %br/
+  =  select :entrega ,:archivo_formato , [['zip','zip'],['pdf','pdf']] ,:prompt => 'Seleccione...'
+  
+  %p
+  = label :entrega ,:archivo_tamano_max, "Tamaño maximo:"
+  %br/
+  =  select :entrega ,:archivo_tamano_max, [['1 MB','1024'],['2 MB','2048']], :prompt => 'Seleccione...'
+  %p
+  = label :entrega ,:numero_max_integrantes, "Numero maximo intregantes:"
+  %br/
+  =  select :entrega ,:numero_max_integrantes, [['1','1'],['2','2'],['3','3']], :prompt => 'Seleccione...'
+  %p
+  = submit_tag "Registrar Entrega"
+  %br/
+%hr
+%p
+.demo  
+  = button_to "Atras" ,:action => "bienvenida"
+  
+  
+

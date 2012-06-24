@@ -1,0 +1,16 @@
+.mensajeprincipal
+	= form_tag :action => "asignar_docente" do
+		%p
+		= label :docente ,:cedula , "Cedula Docente:"
+		%p
+		= text_field :docente ,:cedula
+		%p
+		= submit_tag "Asignar Docente"
+		%br/
+%hr
+%p
+	.demo
+		=button_to "Atras" , :action=>"bienvenida",:controller => "principal"
+
+
+	

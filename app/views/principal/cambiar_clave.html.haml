@@ -1,0 +1,18 @@
+= form_tag :action => "cambiar_mi_clave" do
+  %p
+  = label :usuario ,:contrasena_v , "Contraseña vieja:"
+  %p
+  = password_field :usuario ,:contrasena_v
+  %p
+  = label :usuario ,:contrasena_n1 , "Contraseña nueva:"
+  %p
+  = password_field :usuario ,:contrasena_n1
+  %p
+  = label :usuario ,:contrasena_n2 , "Confirmar contraseña nueva:"
+  %p
+  = password_field :usuario ,:contrasena_n2
+
+  %p
+  = submit_tag "Cambiar"
+  
+      

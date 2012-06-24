@@ -1,0 +1,38 @@
+= form_tag :action => "validar" do
+  %p
+  = label :entrega ,:materia , "Materia:"
+  %br/
+  = text_field :entrega , :materia
+  %p
+  = label :entrega ,:nombre, "Nombre:"
+  %br/
+  = text_field :entrega ,:nombre
+  %p
+  = label_tag("Secciones:")
+  = check_box_tag(:secc_c1)
+  = label_tag(:secc_c1, "C1")
+  = check_box_tag(:secc_c2)
+  = label_tag(:secc_c2, "C2")
+  = check_box_tag(:secc_c3)
+  = label_tag(:secc_c3, "C3")
+  = check_box_tag(:secc_c4)
+  = label_tag(:secc_c4, "C4")
+  %p
+  = label_tag("Fecha de entrega:")
+  %br/
+  = select_tag "dia", options_for_select((1..31).to_a)
+  = select_tag "mes", options_for_select((1..12).to_a)
+  = select_tag "ano", options_for_select(((Date.today.year - 20)..Date.today.year).to_a)
+
+  %p
+  = label :entrega ,:limite_versiones, "Limite de versiones:"
+  %br/
+  = text_field :entrega ,:limite_versiones
+  %p
+  = label :entrega ,:formato, "Tipo de formato:"
+  %br/
+  = text_field :entrega ,:formato
+  %p
+  = submit_tag "Registrar"
+  
+

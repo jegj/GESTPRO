@@ -1,0 +1,57 @@
+!!! Strict
+%html{:lang => "en", "xml:lang" => "en", :xmlns => "http://www.w3.org/1999/xhtml"}
+  %head
+    %title GESTPRO
+    = stylesheet_link_tag    "application", :media => "all"
+    = javascript_include_tag "application"
+    = csrf_meta_tags
+  %body
+    #contenedorprincipal
+      #encabezado
+        .imagencabecera
+          = image_tag "niños.jpg"
+        %h1 
+          %a{:href => "#"} GESTPRO
+        %p Modulo de Gestión de Proyectos
+        #menuprincipal
+          %ul
+            %li
+              %a.resaltado{:href => "bienvenida"}
+                %span Inicio
+      #contenedorsecundario
+        #contenedorterciario
+          %h2 
+            .alert.alert-info=@titulo_pagina
+          %p
+          - if flash[:mensaje2]
+            .error
+              =flash[:mensaje2]
+          %br/    
+          = yield
+          
+            
+          
+        
+        #barralateral
+          .cuadro
+            %h2 Bienvenido
+            %h4              
+              = "#{session[:rol].class} : #{session[:usuario].nombre_completo}"
+              %br/
+              %br/
+              = link_to "Cambio de clave" , :action=>"cambiar_clave" , :controller =>"principal"
+              %p
+              = link_to "Cerrar Sesion" , :action=>"cerrar_sesion" , :controller =>"principal"
+      #pie
+        %p
+          Copyright © 2012 GESTPRO.com -
+          %a{:href => "http://www.infscripts.com/"} CSS Templates
+          by Inf Design - Valid
+          %a{:href => "http://validator.w3.org/check?uri=referer"} XHTML
+          \&
+          %a{:href => "http://jigsaw.w3.org/css-validator/check/referer"} CSS
+          / %@##
+          Diseño proporcionado por
+          = succeed "." do
+            %a{:href => "http://www.freewebtemplates.com"} Free Website Templates
+          / ##@%
