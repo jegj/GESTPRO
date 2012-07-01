@@ -1,0 +1,12 @@
+.mensajeprincipal
+	=form_tag :action => "procesar_eliminar_usuario" do
+		%p
+		= label :usuario ,:cedula ,"Cedula Docente:"
+		%br/
+		= text_field :usuario ,:cedula
+		%p
+		=submit_tag "Eliminar" ,:confirm =>'Esta usted seguro?'
+%hr
+%p
+.demo
+	= button_to "Atras" ,:action => "bienvenida",:controller => "principal"
