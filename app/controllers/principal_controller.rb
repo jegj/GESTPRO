@@ -9,7 +9,7 @@ class PrincipalController < ApplicationController
     elsif session[:usuario].es_administrador?
       @titulo_pagina= "Administrador"     
     elsif session[:usuario].es_estudiante?
-      @titulo_pagina= "Estudiante"     
+      @titulo_pagina= "Materias"     
     end
         
   end
@@ -104,6 +104,15 @@ class PrincipalController < ApplicationController
   
   def procesar_crear_entrega
     # @entrega=params[:entrega]
+    @titulo_pagina= "Registrar Entrega"
+    @materias= session[:rol].materias
+
+    unless params[:entrega] && params[:entrega][:nombre] && params[:entrega][:fecha_entrega] && params[:entrega][:fecha_tope] && params[:entrega][:limite_versiones] && params[:entrega][:archivo_formato] && params[:entrega][:archivo_tamano_max] && params[:entrega][:numero_max_integrantes]
+      flash[:mensaje2]="Faltan Parametros"
+      bitacora "Faltan parametros"
+      redirect_to :action => 'bienvenida',:controller =>'principal'   
+      return
+    end
 
     @entrega=Entrega.new
     @entrega.nombre=params[:entrega][:nombre]
@@ -116,8 +125,7 @@ class PrincipalController < ApplicationController
 
     # @entrega.save! NSException.exceptionWithName(NSString* name, reason:NSString* reason, userInfo:NSDictionary* userInfo)
 
-    @titulo_pagina= "Registrar Entrega"
-    @materias= session[:rol].materias
+    
 
     unless params[:secciones]
       @entrega.errors[:base]<<"No se ha especificado la seccion."
@@ -136,8 +144,6 @@ class PrincipalController < ApplicationController
           es.save      
         }
       end
-
-
       flash[:mensaje2]='Entrega creada con exito'
       redirect_to :action =>'bienvenida'
       return
@@ -150,25 +156,26 @@ class PrincipalController < ApplicationController
     unless params[:entrega_id]
       flash[:mensaje2]="Faltan Parametros"
       render :action => "bienvenida"
-      
       return
     end
     materia_nombre = EntregaSeccion.buscar_materia(params[:entrega_id])    
     @titulo_pagina="Entregables de #{materia_nombre}"
     @entregable=Entregable.where(:entrega_id => params[:entrega_id])
+    @entrega_nombre=Entrega.obtener_nombre(params[:entrega_id])  
   end
   
+  #********************************************************
   def listar_mis_entregables
-    unless params[:entrega_id] || params[:usuario_cedula]
+    unless params[:entrega_id] || session[:usuario].cedula
       flash[:mensaje2]="Faltan Parametros"
       render :action => "bienvenida"
-      
       return
     end
+    
     materia_nombre = EntregaSeccion.buscar_materia(params[:entrega_id])    
     @titulo_pagina="Entregable de #{materia_nombre}"
 
-    grupo=EstudianteGrupo.where(:entrega_id => params[:entrega_id],:estudiante_cedula => params[:usuario_cedula])
+    grupo=EstudianteGrupo.where(:entrega_id => params[:entrega_id],:estudiante_cedula => session[:usuario].cedula)
 
     if(grupo != [])
 
@@ -183,25 +190,33 @@ class PrincipalController < ApplicationController
   end
 
   def realizar_entrega
+
+    unless params[:entrega_id] and session[:usuario].cedula
+      flash[:mensaje2]="Faltan Parametros"
+      render :action => "bienvenida"
+      return
+    end
+
     @titulo_pagina= "Realizar Entrega"
     numero =Entrega.where(:id => params[:entrega_id]).first.numero_max_integrantes
     @integrantes=[[1,1]]
     for x in (2..Integer(numero))
       @integrantes+= [[x,x]]
     end
-    @cedula = params[:usuario_cedula]
+
+    @cedula = session[:usuario].cedula
     @entrega_id = params[:entrega_id]
 
   end
-
- 
+ #******************************************************** 
+ # REVISAR /IMPORTANTE
   def procesar_realizar_entrega
-    
-    tieneGrupo=EstudianteGrupo.where(:estudiante_cedula=> params[:entregable_integrantes],:entrega_id => params[:entrega_id])
+    sa
+    tieneGrupo=EstudianteGrupo.where(:estudiante_cedula=> session[:usuario].cedula,:entrega_id => params[:entrega_id])
 
-    
+     
     if tieneGrupo!=[]
-      bitacora "Tiene #{tieneGrupo}"
+      
       tiene=true
 
       tieneGrupo=tieneGrupo.first.grupo_nro;
@@ -215,10 +230,10 @@ class PrincipalController < ApplicationController
         end
         
       end
-      #Los otros no tienen
+      #Algun otro no pertecia a ese grupo
       unless tiene
 
-        entregable_integrantes=Integer(params[:entregable_integrantes])
+        entregable_integrantes=Integer(session[:usuario].cedula)
         entrega_id=Integer(params[:entrega_id])
         numero_integrantes=Integer(params[:entregable][:numero_integrantes])
       
@@ -244,6 +259,7 @@ class PrincipalController < ApplicationController
           if Estudiante.where(:usuario_cedula=> params[:entregable]["2"])
             integrantes=Integer(params[:entregable]["2"])
             @NgrupoS = EstudianteGrupo.new
+
             @NgrupoS.estudiante_cedula=integrantes
             @NgrupoS.grupo_nro=nGrupo
             @NgrupoS.entrega_id=entrega_id
@@ -295,10 +311,10 @@ class PrincipalController < ApplicationController
         end  
       
       end
-        #Tienen grupo
+        #Tienen grupo y s l mismo
 
       if tiene
-        entregable_integrantes=Integer(params[:entregable_integrantes])
+        entregable_integrantes=Integer(session[:usuario].cedula)
         entrega_id=Integer(params[:entrega_id])
         numero_integrantes=Integer(params[:entregable][:numero_integrantes])
       
@@ -330,11 +346,11 @@ class PrincipalController < ApplicationController
 
     end
     #No tiene grupo
-    bitacora "Entro en procesara #{tieneGrupo}"
+    
     if tieneGrupo==[]
       
       bitacora "No tiene grupo"
-      entregable_integrantes=Integer(params[:entregable_integrantes])
+      entregable_integrantes=Integer(session[:usuario].cedula)
       entrega_id=Integer(params[:entrega_id])
       numero_integrantes=Integer(params[:entregable][:numero_integrantes])
       
@@ -345,7 +361,13 @@ class PrincipalController < ApplicationController
       @grupoS.estudiante_cedula=entregable_integrantes
       @grupoS.entrega_id=entrega_id
       bitacora "Estudiante Grupo"
-      nGrupo=EstudianteGrupo.maximum(:grupo_nro)+1
+
+      nGrupo=(EstudianteGrupo.maximum(:grupo_nro))
+      if nGrupo == nil
+        nGrupo=0
+      else
+        nGrupo=nGrupo+1
+      end
       @grupoS.grupo_nro=nGrupo
       @nuevoGrupo = Grupo.new
       @nuevoGrupo.entrega_id=entrega_id
@@ -414,11 +436,6 @@ class PrincipalController < ApplicationController
     flash[:mensaje2]='Entrega realizada con exito'
     redirect_to :action =>'bienvenida'
   end
-    
-    
-
-    
-
-  end
+end
   
 

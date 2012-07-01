@@ -3,4 +3,9 @@ class Entrega < ActiveRecord::Base
 	set_primary_key :id
 	validates :nombre ,:fecha_entrega,:numero_max_integrantes,:fecha_tope,:archivo_tamano_max,:archivo_formato,:limite_versiones ,:presence => true
 	validates :nombre , :length => {:minimum => 3}
+
+def self.obtener_nombre(id)
+	Entrega.where(:id => id).first.nombre
+end
+
 end

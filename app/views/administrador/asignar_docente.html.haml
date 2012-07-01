@@ -23,16 +23,6 @@
 		= text_field :usuario ,:correo
 
 		%p
-		= label :usuario , :clave ,"Contraseña:"
-		%br/
-		= password_field :usuario , :clave
-
-		%p
-		= label :usuario , :clave_confirmation ,"Repita Contraseña:"
-		%br/
-		= password_field :usuario , :clave_confirmation
-
-		%p
 		= label :docente_materia ,:materia , "Materia:"
 		%br/
 		= collection_select :docente_materia,:materia_id,@materias,:id,:nombre,:prompt => "Seleccionar una Materia"

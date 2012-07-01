@@ -31,7 +31,7 @@
         #barralateral
           .cuadro
             - if flash[:mensaje]
-              %p{:style => "color:black;background-color:yellow"}
+              %p{:style => "color:red;background-color:yellow"}
                 = flash[:mensaje]
             %h2 Inicio de Sesion
             = form_tag :action => "validar" do

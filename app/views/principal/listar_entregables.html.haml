@@ -1,14 +1,19 @@
 .mensajeprincipal
 	-if @entregable.empty?
+		%h3
+			Entrega:
+			="#{@entrega_nombre}"
 		#vacio
 			%p
 				No hay entregables 	
 	-else	
+		%h3
+			Entrega:
+			="#{@entrega_nombre}"
 		#listado_entregable
 			-@entregable.each do  |un_entregable|
 				%h3
 					=link_to "Grupo #{un_entregable.grupo_nro}"
-					=link_to "Entrega: #{Entrega.where(:id => un_entregable.entrega_id).first.nombre} "
 				%div
 					%p
 						="Fecha/Hora: #{un_entregable.fecha_hora}"

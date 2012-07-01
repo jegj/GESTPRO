@@ -4,6 +4,15 @@ class AdministradorController < ApplicationController
 
 	layout "application"
 
+	 def listar_docentes
+	 	@titulo_pagina="Docentes"
+	 	@docentes=Docente.all
+	 end
+
+	 def eliminar_usuario
+	 	@titulo_pagina="Eliminar Usuario"
+	 end
+
 	 def comprobar_docente
 	 	@titulo_pagina="Comprobar Docente"
 	 end
@@ -13,10 +22,10 @@ class AdministradorController < ApplicationController
 	 	@titulo_pagina="Asignar Docente"
 
 	 	unless params[:docente] && params[:docente][:cedula]
-	 		flash[:mensaje2]="Faltan parametros"
-      bitacora "Faltan parametros"
-      redirect_to :action => "comprobar_docente"
-      return
+		  flash[:mensaje2]="Faltan parametros"
+	      bitacora "Faltan parametros"
+	      redirect_to :action => "comprobar_docente"
+	      return
 	 	end
 
 	 	cedula=params[:docente][:cedula]
@@ -80,7 +89,7 @@ class AdministradorController < ApplicationController
  		@materias=Materia.all
  		@usr=nil
 
- 		unless params[:usuario] && params[:usuario][:nombres] && params[:usuario][:apellidos] && params[:usuario][:clave] && params[:usuario][:correo]
+ 		unless params[:usuario] && params[:usuario][:nombres] && params[:usuario][:apellidos]  && params[:usuario][:correo]
  			flash[:mensaje2]="Faltan parametros"
 			bitacora "Faltan parametros"
       redirect_to :action => 'bienvenida',:controller =>'principal'		
@@ -93,14 +102,8 @@ class AdministradorController < ApplicationController
 		 		@usuario.cedula=params[:usuario][:cedula]
 		 		@usuario.nombres=params[:usuario][:nombres]
 		 		@usuario.apellidos=params[:usuario][:apellidos]
-		 		@usuario.clave =params[:usuario][:clave]
+		 		@usuario.clave =params[:usuario][:cedula]
 		 		@usuario.correo=params[:usuario][:correo]
-
-		 		if params[:usuario][:clave] != params[:usuario][:clave_confirmation]
-			 		@usuario.errors[:base]<<"Las claves no coinciden."
-		 			render :action => "asignar_docente"
-		 			return	
- 				end
 
 		 		if params[:docente_materia][:materia_id].empty?
 		 			@usuario.errors[:base]<<"No se especifico la materia."
@@ -130,6 +133,41 @@ class AdministradorController < ApplicationController
 		 		render :action => "asignar_docente"
 		 	end
 	 	end 		
+
+	 end
+
+	 
+
+	 def procesar_eliminar_usuario
+	 	unless params[:usuario] && params[:usuario][:cedula]
+	 		flash[:mensaje2]="Faltan parametros"
+			bitacora "Faltan parametros"
+      redirect_to :action => 'eliminar_usuario'
+      return
+	 	end
+
+	 	user_cedula=params[:usuario][:cedula]
+	 	user=Usuario.buscar_usuario(user_cedula)
+	 	unless user
+	 	 	flash[:mensaje2]="El usuario no existe"
+			bitacora "No se encontro el usuario con la cedula #{user_cedula}"
+	    redirect_to :action => 'eliminar_usuario'
+	    return	
+	 	end
+
+	 	unless session[:usuario].cedula != user_cedula
+	 		flash[:mensaje2]="No te puedes eliminar tu mismo"
+			bitacora "El admin con cedula #{user_cedula} se trato de eliminar"
+	    redirect_to :action => 'eliminar_usuario'
+	    return	
+	 	end
+
+	 	#ELIMINAR EL USUARIO
+	 	user.delete
+
+	 	flash[:mensaje2]="El usuario fue eliminado correctamente"
+	 	bitacora "El admin  con cedula #{session[:usuario].cedula} elimino al usuario con cedula #{user_cedula}"
+	 	redirect_to  :action =>"bienvenida" ,:controller =>"principal"
 
 	 end
 	 

@@ -3,7 +3,7 @@
 	=label :entregable, :nada, "Otros integrantes"
 	-for i in 2..Integer(@cantidad)
 		%p
-			=label :entregable, :integrantes, "Cedula"
-			=text_field :entregable , i
+			=label :entregable, :integrantes ,"Cedula"
+			=text_field_tag "integrantes[]"
 	%br
 	

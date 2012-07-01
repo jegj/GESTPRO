@@ -4,6 +4,10 @@ class InicioController < ApplicationController
   layout "externo" #TODO LOS METODOS USAN ESTE LAYOUT 
   
   def index
+    if session[:usuario]
+      redirect_to :action => "bienvenida" ,:controller => "principal"
+      return
+    end
 # 	@texto='Hola Mundo'
     #render :layout => "xxx" aaSOLO ESTE METODO USA EL LAYOUT
   end

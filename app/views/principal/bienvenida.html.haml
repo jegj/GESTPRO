@@ -10,16 +10,19 @@
 
               =link_to entrega.nombre
               %br/
-              =link_to "Listar Entregables",{:controller => "principal",:action => "listar_entregables",:entrega_id => entrega.id},:class => "nolistado"
+              =link_to "Listar Entregables",{:controller => "principal",:action => "listar_entregables",:entrega_id => entrega.id},:class => "nolistado" ,:post => "true"
               %br/
 
     %p
       =button_to "Crear Entrega" , :action => "crear_entrega"
-    %p
   -if session[:usuario].es_administrador?
     %p
-      .demo 
-        =button_to "Asignar Docente" , :action => "comprobar_docente" , :controller => "administrador"
+      =button_to "Asignar Docente" , :action => "comprobar_docente" , :controller => "administrador"
+    %p
+      =button_to "Listar   Docentes" ,:action =>"listar_docentes" ,:controller =>"administrador"
+    %p
+      =button_to "Eliminar Usuario" ,:action =>"eliminar_usuario" ,:controller => "administrador"
+
   -if session[:usuario].es_estudiante?
     %p
       #listado-materias
@@ -33,7 +36,7 @@
               =link_to entrega.nombre 
               
               =link_to "Realizar entrega",{:controller => "principal",:action => "realizar_entrega",:method => :post, :entrega_id => entrega.id, :usuario_cedula => session[:rol].usuario_cedula},:class => "nolistado" 
-              =link_to "Ver entrega",{:controller => "principal",:action => "listar_mis_entregables", :method => :post,:entrega_id => entrega.id, :usuario_cedula => session[:rol].usuario_cedula}, :class => "nolistado"
+              =link_to "Ver entrega",{:controller => "principal",:action => "listar_mis_entregables", :entrega_id => entrega.id, :usuario_cedula => session[:rol].usuario_cedula},{:method => :post, :class => "nolistado"}
               %br/
               
 

@@ -6,9 +6,7 @@ class Usuario < ActiveRecord::Base
 	has_one :administrador, :foreign_key => :cedula
 
 	validates :nombres , :apellidos , :cedula ,:correo,:clave,:presence => true
-	validates :clave, :confirmation => true
 	validates :nombres , :length => {:minimum => 3}
-	validates :clave , :length => {:minimum => 5}
 	
 
 	def nombre_completo
@@ -54,7 +52,10 @@ class Usuario < ActiveRecord::Base
 	  
 	  if ret=es_administrador?
 	    return ret
-	  end
-      
+	  end     
+	end
+
+	def self.informacion(ced)
+		Usuario.where(:cedula => ced).first
 	end
 end
