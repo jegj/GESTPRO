@@ -1,0 +1,34 @@
+.mensajeprincipal
+	-if @entregable==-1
+		#vacio
+			%p
+				No hay entregables 	
+	-else	
+		#listado_entregable
+			-@entregable.each do  |un_entregable|
+				%h3
+					=link_to "Grupo #{un_entregable.grupo_nro}"
+					=link_to "Entrega: #{Entrega.where(:id => un_entregable.entrega_id).first.nombre} (#{un_entregable.version}/#{Entrega.limite(un_entregable.entrega_id)})"
+				%div
+					%p
+						="Nombre del entregable: #{EntregableArchivo.where(:grupo_nro => un_entregable.grupo_nro,:entrega_id =>un_entregable.entrega_id, :version =>un_entregable.version ).first.nombre}"
+					%p
+						="Fecha/Hora: #{un_entregable.fecha_hora}"
+					%p
+						="Version:  #{un_entregable.version}"
+					%p
+						="Cedula de Estudiante que Entrego : #{un_entregable.estudiante_cedula_entrego}"
+					-if @cuantos>0
+						%p
+							="Otros integrantes: "
+						-@integrantes.each do |integrante|
+							%p
+								="Cedula: #{integrante.estudiante_cedula}"
+
+					%p
+						=link_to "Descargar Entregable",{:controller=>"estudiante",:action=>"descargar_entregable",:entrega_id=>un_entregable.entrega_id,:version=>un_entregable.version},:class=>"nolistado"				
+%hr				
+%p
+.demo
+	= button_to "Atras" ,:action => "bienvenida",:controller =>"principal"
+	

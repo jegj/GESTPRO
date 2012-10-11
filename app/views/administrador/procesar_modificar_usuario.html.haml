@@ -1,0 +1,42 @@
+.mensajeprincipal
+	=error_messages_for :usuario
+	=form_tag :action =>"guardar_modificar_usuario"do
+		%h3
+			-user=Usuario.buscar_usuario(@cedula)
+			-rol1=""
+			-rol2=""
+			-rol3=""
+			-if user.es_estudiante?
+				-rol1="-Estudiante"
+			-if user.es_administrador?
+				-rol2="-Administrador"
+			- if user.es_docente?
+				-rol3="-Docente"
+			-rol="#{rol1}#{rol2}#{rol3}"
+			=rol
+		%p
+		= label :usuario ,:cedula , "Cedula:"
+		%br/
+		= text_field :usuario ,:cedula
+
+		=hidden_field_tag :usuario_antiguo,:cedula_antigua,:value=>@cedula
+		%p
+		= label :usuario ,:nombres , "Nombres:"
+		%br/
+		= text_field :usuario ,:nombres
+
+		%p
+		= label :usuario ,:apellidos , "Apellidos:"
+		%br/
+		= text_field :usuario ,:apellidos
+
+		%p
+		= label :usuario ,:correo , "Correo:"
+		%br/
+		= text_field :usuario ,:correo
+		%p
+		=submit_tag "Modificar"
+%p
+%hr
+.demo
+	=button_to "Atras",:action=>"modificar_usuario"	

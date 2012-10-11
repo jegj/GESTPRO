@@ -1,0 +1,9 @@
+-if @cantidad > 1 
+	%p
+	=label :entregable, :otro_integrante, "Otros integrantes:"
+	-for i in 2..@cantidad
+		%p
+			=label :entregable, :integrantes ,"Cedula:"
+			=text_field_tag "integrantes[]"
+	%br
+	

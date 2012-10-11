@@ -1,0 +1,24 @@
+.sms
+	%p
+		Seleccione la seccion que desea eliminar, todo lo relacionado a la seccion tambien se vera afectado
+.hijo_horizontal
+	.mensajeprinncipal
+	= form_tag(:action=>"procesar_eliminar_seccion")do
+		%p
+		=label :entrega_seccion ,:materia_id,"Materia:"
+		%br/
+		=collection_select :entrega_seccion,:materia_id,@materias,:id,:nombre,:prompt=>"Seleccione"
+		%span{:id =>'spinner',:style=>"display:none"}
+			=image_tag "spinner.gif"
+		%p
+		=label :seccion,:nombre,"Seccion:"
+		#secciones
+		%p
+		=submit_tag "Eliminar Seccion",:confirm=>"Esta usted seguro?"
+		%br/  
+%hr
+%p
+.demo
+	= button_to "Atras" ,:action => "bienvenida",:controller=>"principal"
+
+

@@ -1,0 +1,20 @@
+.mensajeprincipal
+=error_messages_for :materia
+=form_tag(:action=>"crear_materia")do
+
+	%p
+	=label :materia,:id ,"Id/Codigo Materia:"
+	%br/
+	=text_field :materia,:id
+	%p
+	=label :materia,:nombre ,"Nombre Materia:"
+	%br/
+	=text_field :materia ,:nombre
+	%p
+	=submit_tag "Crear Materia"
+%p
+%hr
+.padre
+	%p
+	.demo
+		= button_to "Atras" ,:action => "bienvenida",:controller => "principal"

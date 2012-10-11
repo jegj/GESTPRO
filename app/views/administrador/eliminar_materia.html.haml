@@ -1,0 +1,13 @@
+.hijo_horizontal
+	.mensajeprincipal
+		=form_tag :action=>"procesar_eliminar_materia" do
+			%p
+			=label :materia ,:id,"Materia:"
+			%br/
+			= collection_select :materia,:id,@materias,:id,:nombre,:prompt => "Seleccionar una Materia"
+			%p
+			=submit_tag "Eliminar",:confirmation=>"Esta usted seguro?"
+%hr
+%p
+.demo
+	=button_to "Atras",:action=>"bienvenida",:controller=>"principal"

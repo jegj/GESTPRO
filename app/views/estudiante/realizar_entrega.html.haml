@@ -1,0 +1,33 @@
+.mensajeprincipal
+  %h3
+    Materia:
+    =@materia_nombre
+  %h3
+    Entrega:
+    =@entrega_nombre
+  = error_messages_for :entregable
+  = form_tag({:action => "procesar_realizar_entrega"},:multipart=>true)do
+    %p
+    =label :entregable, :grupo, "Grupo:"
+    =hidden_field_tag :entregable_integrantes, :integrantes, :value =>  @cedula
+    =hidden_field_tag :entrega_id, :integrantes, :value => @entrega_id
+    %p
+    =label :entregable, :numero_integrant, "Numero intregantes:"
+    %br/
+    =select :entregable , :numero_integrantes, @integrantes , :prompt => 'Seleccione...'
+    %span{ :id => 'spinner',:style => "display:none"}
+      = image_tag "spinner.gif"
+    %br/
+    #integrantes
+    -extension=Entrega.obtener_formato(@entrega_id)
+    %p
+      =label :entregable, :archiv, "Archivo(#{extension}):"
+      =file_field(:entregable, :archivo, :value =>"")
+      
+        
+    %p
+    = submit_tag "Guardar"
+%p
+%hr
+.demo
+  =button_to "Atras",:action=>"bienvenida",:controller=>"principal"

@@ -1,0 +1,13 @@
+.hijo_horizontal
+	.mensajeprincipal
+		=form_tag :action =>"procesar_modificar_usuario"do
+			%p
+			= label :usuario ,:cedula , "Cedula Usuario:"
+			%br/
+			= text_field :usuario ,:cedula
+			%p
+			=submit_tag "Modificar"
+%p
+%hr
+.demo
+	=button_to "Atras",:action=>"bienvenida",:controller=>"principal"

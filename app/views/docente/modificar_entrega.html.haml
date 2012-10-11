@@ -1,0 +1,64 @@
+= error_messages_for :entrega
+
+=form_tag({:action => "guardar_modificar_entrega"},:multipart => true )do	
+	%p
+	= label :entrega_seccion,:materia_id ,"	Materia:",:class =>"negro"
+	= EntregaSeccion.buscar_materia(@entrega.id)
+	%br/
+
+	%p
+	=label :entrega_seccion,:seccion_nombre,"Seccion:"
+	-secciones= Seccion.secciones_nombres(@materia_id)
+	-secciones.each do |seccion| 
+		=label_tag seccion.nombre
+		=check_box_tag "secciones[]",seccion.nombre
+
+	=hidden_field_tag :entrega_aux,:valor,:value => @entrega.id
+
+	=hidden_field_tag :entrega_seccion,:materia_id ,:value =>@materia_id
+
+	%p
+	=label :entrega ,:nombre ,"Nombre:"
+	%br/
+	=text_field :entrega,:nombre ,:value =>@entrega.nombre
+
+	%p
+	=label :entrega,:fecha_entrega,"Fecha de Entrega"
+	%br/
+	= text_field :entrega ,:fecha_entrega ,:class =>'fecha',:value => @entrega.fecha_entrega
+
+	%p
+	=label :entrega,:fecha_tope,"Fecha tope"
+	%br/
+	=text_field :entrega,:fecha_tope,:class =>'fecha',:value => @entrega.fecha_tope
+
+	%p
+	= label :entrega ,:limite_versiones, "Limite de versiones:"
+	%br/
+	= select :entrega,:limite_versiones,[[1,1],[5,5],[10,10],[20,20]], :prompt => @entrega.limite_versiones
+	
+	%p
+	=label :entrega ,:archivo_formato ,"Tipo Formato:"
+	%br/
+	=  select :entrega ,:archivo_formato , [['zip','zip'],['pdf','pdf']] ,:prompt => @entrega.archivo_formato
+	%p
+	=label :entrega ,:archivo_tamano_max ,"Tamaño Maximo:"
+	%br/
+	= select :entrega,:archivo_tamano_max,[['1 MB','1024'],['2 MB','2048']], :prompt => 'Seleccione...'
+	%p
+	=label :entrega,:numero_max_integrantes ,"Numero maximo de integrantes:"
+	%br/
+	=select :entrega,:numero_max_integrantes,[['1','1'],['2','2'],['3','3']], :prompt => '@entrega.numero_max_integrantes'
+	%p
+	=label :entrega_archivo,:archivo,"Archivo:"
+	%br/
+	=file_field :entrega_archivo,:archivo
+
+	%p
+	= submit_tag "Modificar Entrega"
+	%br/
+  
+%hr
+%p
+.demo
+	= button_to "Atras" ,:action => "bienvenida",:controller => "principal"

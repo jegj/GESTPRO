@@ -1,0 +1,23 @@
+.mensajeprincipal 
+	.sms
+		%p			
+			Se agregara el estudiante a la seccion especificada 
+	=form_tag(:action => "procesar_agregar_estudiante")do
+		%p
+		=label :materia ,:id,"Materia:"
+		%br/
+		=collection_select :materia,:id,@materias,:id,:nombre,:prompt=>"Seleccione"
+		%p
+		=label :seccion,:nombre,"Seccion:"
+		%br/
+		#secciones_agregar_est
+		%p
+		=label :estudiante,:cedula ,"Cedula:"
+		%br/
+		=text_field :estudiante,:cedula
+		%p
+		= submit_tag "Agregar Estudiante"
+%hr
+%p			
+.demo
+	= button_to "Atras" ,:action => "bienvenida",:controller=>"principal"

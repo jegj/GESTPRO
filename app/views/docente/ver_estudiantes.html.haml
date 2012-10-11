@@ -1,0 +1,14 @@
+.mensajeprincipal
+	-@secciones.each do |seccion|
+		%table{:border=>1,:width=>"60%"}
+			%tr
+				%th= seccion.nombre
+			-@estudiantes.each do |estudiante|
+				-if estudiante.seccion_nombre.eql?(seccion.nombre)
+					%tr
+						%td= Usuario.buscar_usuario(estudiante.estudiante_cedula).descripcion
+			%p
+%p
+%hr
+.demo
+	=button_to "Atras" ,:action=>"bienvenida",:controller=>"principal"

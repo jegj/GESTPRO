@@ -1,0 +1,21 @@
+.sms
+	%p
+		Se mostrara informacion basica del estudiante
+.hijo_horizontal
+	.mensajeprincipal
+	=form_tag(:action => "buscar_estudiante") do
+		%p
+		=label :estudiante,:cedula,"Cedula Estudiante:"
+		%br/
+		=text_field :estudiante,:cedula
+		%p
+		=submit_tag "Consultar"
+		%p
+
+%p
+%hr
+.padre
+	%p
+	.demo
+		= button_to "Atras" ,:action => "bienvenida",:controller => "principal"
+

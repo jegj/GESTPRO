@@ -1,0 +1,9 @@
+.hijo_horizontal	
+	%h2
+		Seleccione su rol:
+	.mensajeprincipal
+		-session[:todos_roles].each do |rol|
+			.demo
+				%p
+				=button_to rol ,{:action =>"escoger_rol",:rol=>rol},:class=>"opciones"
+				%br/

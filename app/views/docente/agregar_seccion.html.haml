@@ -1,0 +1,40 @@
+.padre
+	.hijo
+		.mensajeprincipal 
+			.sms
+				%p
+					Va proceder a crear una seccion,especifique el archivo Excel(.xls) de los estudiantes
+			%p
+			%h3
+				Seleccione la materia:
+			=form_tag({:action => "procesar_agregar_seccion"},:multipart => true )do
+				%p
+				=label :materia,:id ,"Materia:"
+				= collection_select :materia ,:id,@materias,:id,:nombre,:prompt=>"Seleccione"
+				%br/
+				%p
+				=label :archivo,:excel ,"Archivo(.xls):"
+				=file_field :archivo,:excel 
+				%p
+				= submit_tag "Agregar Seccion"
+%p
+%hr
+.demo
+	=button_to "Atras",:action=>"bienvenida",:controller=>"principal"			
+
+/ .mensajeprincipal
+/ 	%h3
+/ 		Materia:
+/ 		=@materia_nombre
+/ 	=form_tag({:action => "procesar_agregar_estudiante"},:multipart => true )do		
+/ 		=label :archivo,:excel ,"Archivo:"
+/ 		%br/
+/ 		=file_field :archivo,:excel
+/ 		=hidden_field_tag :materia,:id ,:value=>@materia_id
+/ 		%p
+/ 		= submit_tag "Agregar Estudiantes"
+/ 		%br/
+/ %hr
+/ %p
+/ .demo
+/ 	=button_to "Atras",:action=>"bienvenida",:controller=>"principal"	

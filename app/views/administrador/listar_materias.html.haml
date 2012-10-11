@@ -1,0 +1,24 @@
+.mensajeprincipal
+	-if @materias
+		#listado-profesores
+			%table{:border=>1,:width=>"60%"}
+				%tr
+					%th Materias
+					%th{:colspan=>"4"} Secciones
+				-@materias.each do |mat|
+					-secciones=mat.secciones
+					%tr
+						-if secciones.empty?
+							%td= "#{mat.descripcion} *"
+						-else
+							%td= mat.descripcion
+						-secciones.each do |secc|
+							%td= secc.nombre
+
+.sms
+	%p
+		(*) Debe agregar secciones
+%hr
+.demo
+	%p
+	= button_to "Atras" ,:action => "bienvenida" ,:controller =>"principal"

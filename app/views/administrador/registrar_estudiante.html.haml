@@ -1,0 +1,28 @@
+.mensajeprincipal
+	=error_messages_for :usuario
+	=form_tag :action =>"procesar_registrar_estudiante"do
+		%p
+		= label :usuario ,:cedula , "Cedula:"
+		%br/
+		= text_field :usuario ,:cedula
+
+		%p
+		= label :usuario ,:nombres , "Nombres:"
+		%br/
+		= text_field :usuario ,:nombres
+
+		%p
+		= label :usuario ,:apellidos , "Apellidos:"
+		%br/
+		= text_field :usuario ,:apellidos
+
+		%p
+		= label :usuario ,:correo , "Correo:"
+		%br/
+		= text_field :usuario ,:correo
+		%p
+		=submit_tag "Registrar"
+%p
+%hr
+.demo
+	=button_to "Atras",:action=>"bienvenida",:controller=>"principal"

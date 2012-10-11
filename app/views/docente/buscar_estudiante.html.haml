@@ -1,0 +1,39 @@
+.mensajeprincipal
+	-if @user==nil
+		%h2 
+			No hay Resultados
+	-else
+		%table{:border=>1,:width=>"60%"}
+			%tr
+				%td.name Cedula:
+				%td= @user.cedula
+			%tr
+				%td.name Nombres:
+				%td= @user.nombres
+			%tr
+				%td.name Apellidos:
+				%td= @user.apellidos
+			%tr
+				%td.name Correo:
+				%td.name
+					-if @user.correo==nil
+						="--------"
+					-else
+						= @user.correo
+			%tr
+				%td.name 
+					.informacion
+						Materias Actuales
+				%td.name 
+					.informacion
+						Seccion
+			-@materias.each do |mater|
+				%tr
+					%td= Materia.buscar_materia(mater)
+					%td= EstudianteSeccion.buscar_seccion(mater,@user.cedula).seccion_nombre
+
+
+%hr
+%p
+.demo  
+	= button_to "Atras" ,:action => "consultar_estudiante",:controller => "docente"
