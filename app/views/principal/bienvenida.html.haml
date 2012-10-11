@@ -1,43 +1,118 @@
 .mensajeprincipal
-  -if  session[:usuario].es_docente? 
+  
+  -if  session[:rol].class.to_s.eql?("Docente")
     #listado-materias
       -session[:rol].materias.each do |materia|
         %h3
           =link_to materia.nombre
-        %div  
+        %div
+          -if materia.secciones.empty?
+            .alerta
+              %p
+                No hay secciones en esta materia,por favor registre una seccion
+          -else
+            %h3 Secciones:
+            -materia.secciones.each do |seccion|
+              =seccion.nombre
+            %p    
+            =link_to "Ver Estudiantes",{:controller=>"docente",:action=>"ver_estudiantes",:materia_id=>materia.id},:class=>"nolistado"
+          %h3
+            Entregas:  
           %p
+            -if materia.entregas.empty?
+              .alerta
+                %p
+                  No hay entregas
+            -else
             -materia.entregas.each do |entrega|
-
               =link_to entrega.nombre
               %br/
-              =link_to "Listar Entregables",{:controller => "principal",:action => "listar_entregables",:entrega_id => entrega.id},:class => "nolistado" ,:post => "true"
+              =link_to "ListarEntregables",{:controller => "docente",:action => "listar_entregables",:entrega_id => entrega.id},:class => "nolistado" 
+              =link_to "Modificar",{:controller =>"docente",:action =>"modificar_entrega",:entrega_id =>entrega.id},:class => "nolistado"
+              =link_to "Descargar",{:controller=>"docente",:action=>"descargar_entrega",:entrega_id =>entrega.id},:class=>"nolistado"
+              =link_to "Eliminar",{:controller=>"docente",:action=>"eliminar_entrega",:entrega_id =>entrega.id},:class=>"nolistado",:confirm=>"Esta usted seguro?"
               %br/
+        
+    %p
+    %h3
+      Opciones:
+    .demo
+      =button_to "Crear Entrega" , {:action => "crear_entrega",:controller =>"docente"},:class=>"opciones"
+      %br/
+      =button_to "Consultar Estudiante",{:action =>"consultar_estudiante",:controller =>"docente"},:class =>"opciones"
+      %br/
+      =button_to "Agregar Seccion",{:controller =>"docente",:action=>"agregar_seccion"},:class=>"opciones"
+      %br/
+      =button_to "Agregar Estudiante",{:controller=>"docente",:action=>"agregar_estudiante"},:class=>"opciones"
+      %br/
+      =button_to "Eliminar Seccion",{:controller=>"docente",:action=>"eliminar_seccion"},:class=>"opciones"
+      %br/
+      =button_to "Eliminar Estudiante",{:controller=>"docente",:action=>"eliminar_estudiante"},:class=>"opciones"
 
-    %p
-      =button_to "Crear Entrega" , :action => "crear_entrega"
-  -if session[:usuario].es_administrador?
-    %p
-      =button_to "Asignar Docente" , :action => "comprobar_docente" , :controller => "administrador"
-    %p
-      =button_to "Listar   Docentes" ,:action =>"listar_docentes" ,:controller =>"administrador"
-    %p
-      =button_to "Eliminar Usuario" ,:action =>"eliminar_usuario" ,:controller => "administrador"
 
-  -if session[:usuario].es_estudiante?
+  -if session[:rol].class.to_s.eql?("Administrador")
+    %h3 Opciones de Administrador:
+    .hijo_horizontal
+      .demo
+        %p
+          =button_to "Registrar/Asignar Docente" , {:action => "comprobar_docente" , :controller => "administrador"},:class =>"opciones"
+        %p
+          =button_to "Registrar Estudiante",{:action=>"registrar_estudiante",:controller=>"administrador"},:class=>"opciones"
+        %p
+          =button_to "Registrar Materia",{:action=>"agregar_materia",:controller=>"administrador"},:class=>"opciones"
+        %p
+          =button_to "Listar Docentes" ,{:action =>"listar_docentes" ,:controller =>"administrador"},:class => "opciones"
+        %p
+          =button_to "Listar Materias" ,{:action =>"listar_materias" ,:controller =>"administrador"},:class => "opciones"
+        %p
+          =button_to "Eliminar Usuario" ,{:action =>"eliminar_usuario" ,:controller => "administrador"},:class=>"opciones"
+        %p
+          =button_to "Eliminar Materia" ,{:action =>"eliminar_materia" ,:controller => "administrador"},:class=>"opciones"
+        %p
+          =button_to "Modificar Usuario",{:action=>"modificar_usuario",:controller=>"administrador"},:class=>"opciones"
+
+  -if session[:rol].class.to_s.eql?("Estudiante")
     %p
-      #listado-materias
-      -session[:rol].materias.each do |materia|
-        %h3
-          =link_to materia.nombre
-        %div  
+      -if session[:rol].materias.empty?
+        .alerta
           %p
-            -materia.entrega_cedula(session[:rol].usuario_cedula).each do |entrega|
+            No tiene materias asignadas,comuniquese con Control de Estudio.
+      #listado-materias
+        -session[:rol].materias.each do |materia|
+          %h3
+            =link_to materia.nombre
+          %div  
+            %p
+              %ul
+              -entregas_asociadas=materia.entrega_cedula(session[:rol].usuario_cedula)
+              -if entregas_asociadas.empty?
+                .alerta
+                  %p
+                    No hay entregas
+              -else
+                -entregas_asociadas.each do |entrega|
 
-              =link_to entrega.nombre 
-              
-              =link_to "Realizar entrega",{:controller => "principal",:action => "realizar_entrega",:method => :post, :entrega_id => entrega.id, :usuario_cedula => session[:rol].usuario_cedula},:class => "nolistado" 
-              =link_to "Ver entrega",{:controller => "principal",:action => "listar_mis_entregables", :entrega_id => entrega.id, :usuario_cedula => session[:rol].usuario_cedula},{:method => :post, :class => "nolistado"}
-              %br/
+                  %h3
+                    =entrega.nombre
+                  %p
+
+                    -if Date.today > entrega.fecha_tope
+                      .alerta
+                        %p 
+                          Ya paso la fecha de entrega
+                        ="Fecha Tope:#{entrega.fecha_tope}"
+                    -else
+                      ="Fecha Tope:#{entrega.fecha_tope}"
+                      %p
+                      =link_to "Enviar Entregable",{:controller => "estudiante",:action => "realizar_entrega", :entrega_id => entrega.id},:class => "nolistado" 
+                 
+                  %p
+                  =link_to "Ver entregables enviados",{:controller => "estudiante",:action => "listar_mis_entregables", :entrega_id => entrega.id, :usuario_cedula => session[:rol].usuario_cedula},{:method => :post, :class => "nolistado"}
+                  %p
+                  =link_to "Descargar Enunciado",{:controller=>"estudiante",:action=>"descargar_enunciado",:entrega_id=>entrega.id},:class=>"nolistado"
+                  %br/
+                  %br/
+
               
 
 

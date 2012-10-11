@@ -13,10 +13,14 @@ h3 {
 	font-size: 15px;
 	font-weight: bold;
 }
-
+		
 form {
 	padding: 0;
 	margin: 0;
+}
+
+input[type=text],[type=password]{
+	width:200px;
 }
 
 blockquote {
@@ -426,9 +430,45 @@ img.alignleft {
 
 .error{
   
-  color:RED;
-  background-color:YELLOW;
-  
+  /*color:RED;
+  background-color:YELLOW;*/
+color: #D8000C;
+background-color: #FFBABA;
+background-image: url('error.png'); 
+}
+
+
+
+.exito {
+color: #4F8A10;
+background-color: #DFF2BF;
+background-image:url('success.png');
+}
+
+.exito, .error {
+border: 1px solid;
+margin: 10px 0px;
+padding:15px 10px 15px 50px;
+background-repeat: no-repeat;
+background-position: 10px center;
+}
+
+.alerta {
+       font-family:Arial, Helvetica, sans-serif; 
+       font-size:13px;
+       border: 1px solid;
+       margin: 10px 0px;
+       padding:15px 10px 15px 50px;
+       background-repeat: no-repeat;
+       background-position: 10px center;
+       position:relative;
+}
+
+.alerta{
+ color: #9F6000;
+ background-color: #FEEFB3;
+ background-image: url('alerta.gif');
+
 }
 
 /*****************NO USADO**********************/
@@ -506,4 +546,34 @@ img.alignleft {
 .sms p{
 	color:red;
 }
+
+.opciones {
+	width:200px;
+}
+
+#datos p{
+	 color: #27609b;
+	font-size: 150%;
+}
+
+.informacion{
+	font-size: 100%;
+	font-weight: bold;	
+}
+
+.padre {
+	 display: table;
+   height:200px;
+}
+
+.hijo{
+	 display: table-cell;
+   vertical-align: middle;
+}
+
+.hijo_horizontal{
+	 text-align: center;
+}
+
+
 

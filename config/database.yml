@@ -12,10 +12,10 @@ development:
   adapter: mysql2
   encoding: utf8
   reconnect: false
-  database: labati_development
+  database: labati_final
   pool: 5
   username: root
-  password:
+  password: madrid
   socket: /var/run/mysqld/mysqld.sock
 
 # Warning: The database defined as "test" will be erased and
@@ -28,15 +28,15 @@ test:
   database: GESTPRO_test
   pool: 5
   username: root
-  password:
+  password: madrid
   socket: /var/run/mysqld/mysqld.sock
 
 production:
   adapter: mysql2
   encoding: utf8
   reconnect: false
-  database: labati_development #GESTPRO_production
+  database: labati_final #GESTPRO_production
   pool: 5
   username: root
-  password:
+  password: madrid
   socket: /var/run/mysqld/mysqld.sock

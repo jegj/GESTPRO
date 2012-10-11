@@ -16,32 +16,41 @@
         #menuprincipal
           %ul
             %li
-              %a.resaltado{:href => "bienvenida"}
+              %a.resaltado{:href =>"bienvenida"}
                 %span Inicio
       #contenedorsecundario
         #contenedorterciario
           %h2 
             .alert.alert-info=@titulo_pagina
           %p
-          - if flash[:mensaje2]
+          - if flash[:error2]
             .error
-              =flash[:mensaje2]
+              =flash[:error2]
+          - if flash[:exito]
+            .exito
+              =flash[:exito]
           %br/    
           = yield
-          
-            
-          
-        
         #barralateral
           .cuadro
             %h2 Bienvenido
-            %h4              
-              = "#{session[:rol].class} : #{session[:usuario].nombre_completo}"
+            %h4
+              -unless session[:rol]         
+                ="Bienvenido usuario: #{session[:usuario].nombre_completo}"
+              -else             
+                = "#{session[:rol].class} : #{  session[:usuario].nombre_completo}"
               %br/
               %br/
               = link_to "Cambio de clave" , :action=>"cambiar_clave" , :controller =>"principal"
               %p
-              = link_to "Cerrar Sesion" , :action=>"cerrar_sesion" , :controller =>"principal"
+              -if session[:todos_roles]
+                =link_to "Cambiar Rol",:action=>"seleccionar_rol",:controller=>"principal"
+              %p
+              = link_to "Cerrar Sesion" ,{:action=>"cerrar_sesion" , :controller =>"principal"},:class=>"nolistado"
+          %h2 Calendario: 
+          .demo
+            #datepicker
+          %p
       #pie
         %p
           Copyright © 2012 GESTPRO.com -

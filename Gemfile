@@ -12,7 +12,6 @@ gem 'haml'
 gem 'haml-rails'
 gem 'therubyracer'
 gem 'execjs'
-
 # Gems used only for assets and not required
 # in production environments by default.
 group :assets do
@@ -29,6 +28,9 @@ gem 'jquery-rails'
 
 gem 'dynamic_form'
 
+gem 'roo'
+
+
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
 
@@ -36,7 +38,7 @@ gem 'dynamic_form'
 # gem 'jbuilder'
 
 # Use unicorn as the app server
-# gem 'unicorn'
+gem 'unicorn'
 
 # Deploy with Capistrano
 # gem 'capistrano'

@@ -9,6 +9,20 @@ class EstudianteSeccion < ActiveRecord::Base
 # 	  Estudiante.where(:usuario_cedula => estudiante_cedula).first
 # 	end
 	
+	def self.buscar_seccion(materia_id,cedula)	
+		EstudianteSeccion.where(:estudiante_cedula=>cedula,:materia_id=>materia_id).first
+	end
 
+	def self.numero_secciones(materia_id,cedula)
+		EstudianteSeccion.where(:estudiante_cedula=>cedula,:materia_id=>materia_id).count
+	end
+
+	def self.buscar_estudiante_seccion(materia_id,nombre_seccion,cedula)
+		EstudianteSeccion.where(:estudiante_cedula=>cedula,:materia_id=>materia_id,:seccion_nombre=>nombre_seccion).first
+	end
+
+	def self.obtener_estudiantes(materia_id)
+		EstudianteSeccion.where(:materia_id=>materia_id)
+	end
 	
 end

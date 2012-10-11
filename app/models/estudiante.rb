@@ -10,4 +10,8 @@ class Estudiante < ActiveRecord::Base
 	def self.buscar_estudiante(cedula)
 		Estudiante.where(:usuario_cedula => cedula)
 	end
+	def self.cursa(cedula,materia,seccion)
+		EstudianteSeccion.where(:estudiante_cedula => cedula, :materia_id => materia,:seccion_nombre => seccion)
+	end
+
 end

@@ -16,36 +16,44 @@
         #menuprincipal
           %ul
             %li
-              %a.resaltado{:href => "index"}
+              %a.resaltado{:href => "#"}
                 %span Inicio
       #contenedorsecundario
         #contenedorterciario
           %h2
             .alert.alert-info=@titulo_pagina
+          %p
+            - if flash[:error2]
+              .error
+                = flash[:error2]
+            - if flash[:exito]
+              .exito
+                = flash[:exito]
           .mensajeprincipal
             = yield
-          %p
-          - if flash[:mensaje2]
-            .error
-              = flash[:mensaje2]
+         
         #barralateral
           .cuadro
-            - if flash[:mensaje]
-              %p{:style => "color:red;background-color:yellow"}
-                = flash[:mensaje]
+            - if flash[:error]              
+              .error
+                =flash[:error]
             %h2 Inicio de Sesion
             = form_tag :action => "validar" do
               %p
               = label :usuario ,:cedula , "Cedula:"
               / # REGISTRO/CAMPO/COMO_SE_VE
+              %br/
               = text_field :usuario , :cedula
               / #REGISTRO /CAMPO
               %p
               = label :usuario ,:clave , "Clave:"
+              %br/
               = password_field :usuario , :clave
               %p
               = submit_tag "Entrar"
+            %p
             = link_to "¿Olvido su cotraseña?",:action=>"olvido_contrasena"
+          %p
       #pie
         %p
           Copyright © 2012 GESTPRO.com -

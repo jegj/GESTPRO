@@ -12,6 +12,9 @@
             autoHeight: false,
             navigation: true,
             collapsible: true
+
+  $ ->
+     $("input:submit, a, button", ".demo").button()
           
   $ ->
    		$('#entrega_seccion_materia_id').change -> 
@@ -22,24 +25,35 @@
    				success: (data) -> 
    					$('#secciones').html data
 						$('#spinner').hide()
+  $ ->
+      $('#materia_id').change ->
+        materia_id=$(this).attr('value')
+        $.ajax
+          url: 'ajax_buscar_seccion_agregar?materia_id='+materia_id
+          success:  (data)->
+            $('#secciones_agregar_est').html data 
 
   $ ->
       $('.fecha').datepicker
         showOn: "button",
         buttonImage: "/assets/imagedate.gif",
         buttonImageOnly: true
-        dateFormat: "yy-mm-dd"
+        dateFormat: "yy-mm-dd"  
   $ ->
       $('#entregable_numero_integrantes').change -> 
         $('#spinner').show()
         integrantes=$(this).attr('value')
         $.ajax
-          url: 'ajax_integrante_otro?cantidad='+integrantes,
+          url: 'ajax_integrante_otro?cantidad='+integrantes
           success: (data) ->
             $('#integrantes').html data
             $('#spinner').hide()
 
-        
+  $ ->
+      $('#datepicker').datepicker()
+
+
+  
         
 
 

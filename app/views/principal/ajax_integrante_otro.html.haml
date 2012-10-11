@@ -1,9 +1,0 @@
--if Integer(@cantidad) > 1 
-	%p
-	=label :entregable, :nada, "Otros integrantes"
-	-for i in 2..Integer(@cantidad)
-		%p
-			=label :entregable, :integrantes ,"Cedula"
-			=text_field_tag "integrantes[]"
-	%br
-	

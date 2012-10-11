@@ -1,15 +1,16 @@
-.sms
-	%p
-		Si el docente no existe se creara el docente.
-.mensajeprincipal
-	= form_tag :action => "asignar_docente" do
+.hijo_horizontal
+	.sms
 		%p
-		= label :docente ,:cedula , "Cedula Docente:"
-		%p
-		= text_field :docente ,:cedula
-		%p
-		= submit_tag "Asignar Docente"
-		%br/
+			Si el docente no existe se creara el docente.
+	.mensajeprincipal
+		= form_tag :action => "asignar_docente" do
+			%p
+			= label :docente ,:cedula , "Cedula Docente:"
+			%p
+			= text_field :docente ,:cedula
+			%p
+			= submit_tag "Asignar Docente"
+			%br/
 %hr
 %p
 	.demo

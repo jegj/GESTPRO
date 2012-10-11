@@ -1,6 +1,9 @@
 # -*- encoding : utf-8 -*-
 require File.expand_path('../boot', __FILE__)
-
+require 'digest/md5'
+require 'rubygems'
+require 'roo'
+require 'iconv'
 require 'rails/all'
 
 if defined?(Bundler)
@@ -26,7 +29,7 @@ module GESTPRO
     # Activate observers that should always be running.
     # config.active_record.observers = :cacher, :garbage_collector, :forum_observer
 
-    config.active_record.pluralize_table_names=false
+    config.active_record.pluralize_table_names=FALSE
     
     # Set Time.zone default to the specified zone and make Active Record auto-convert to this zone.
     # Run "rake -D time" for a list of tasks for finding time zone names. Default is UTC.
@@ -40,7 +43,7 @@ module GESTPRO
     config.encoding = "utf-8"
 
     # Configure sensitive parameters which will be filtered from the log file.
-    config.filter_parameters += [:password]
+    config.filter_parameters += [:password,:clave]
 
     # Use SQL instead of Active Record's schema dumper when creating the database.
     # This is necessary if your schema can't be completely dumped by the schema dumper,
@@ -55,8 +58,10 @@ module GESTPRO
 
     # Enable the asset pipeline
     config.assets.enabled = true
-
     # Version of your assets, change this if you want to expire all your assets
     config.assets.version = '1.0'
+    #para los assets en un subdirectorio
+    #config.action_controller.relative_url_root = "/lab04"
   end
 end
+    

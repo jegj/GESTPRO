@@ -26,6 +26,7 @@
 		= label :docente_materia ,:materia , "Materia:"
 		%br/
 		= collection_select :docente_materia,:materia_id,@materias,:id,:nombre,:prompt => "Seleccionar una Materia"
+		
 		%p
 		= submit_tag "Guardar"
 - else

@@ -1,11 +1,14 @@
 .mensajeprincipal
 	-if @docentes
 		#listado-profesores
-			%h3 Cedulas:
-			-@docentes.each do |doc|
-				-mi_docente = Usuario.informacion(doc.usuario_cedula)
-				%h4
-					=mi_docente.descripcion
+			%table{:border=>1,:width=>"60%"}
+				%tr
+					%th Cedula-Nombre
+				-@docentes.each do |doc|
+					-mi_docente = Usuario.informacion(doc.usuario_cedula)
+					%tr
+						%td= mi_docente.descripcion
 %hr
-%p
+.demo
+	%p
 	= button_to "Atras" ,:action => "bienvenida" ,:controller =>"principal"
